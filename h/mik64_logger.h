@@ -1,6 +1,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
-#include "IWriter.h"
+#include "i_writer.h"
 #include <string>
 #include <sstream>
 #include <queue>
@@ -39,11 +39,10 @@ namespace mik64{
                 }
             private:
                 std::ostringstream logBuffer;
-        };
-    protected:
+        };    
+    private:
         Logger();
         ~Logger();
-    private:
         Logger(const Logger&) = delete;
         Logger& operator=(const Logger&) = delete;
         void enQueue(const std::string& str);
@@ -53,11 +52,10 @@ namespace mik64{
         std::condition_variable cv_;
         std::mutex mtx_;
         std::queue<std::string> front_;
-        std::queue<std::string> back_;
         std::atomic<bool> running_{true};
-        std::atomic<bool> is_ptr_changed_{false};
-        int batch_ = 64;
+        std::atomic<size_t> pending_{0};
+        bool is_ptr_changed_{false};
         std::vector<std::shared_ptr<IWriter>> writerptrs_;
     };
 }
-# endif // LOGGER_H
+#endif // LOGGER_H

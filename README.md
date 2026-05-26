@@ -1,4 +1,4 @@
-# CppLogger
+# mik64-logger
 
 C++ logging library using the Singleton pattern. Supports multiple output destinations.
 
@@ -96,7 +96,7 @@ This project uses C++17 and requires a C++ compiler
 
 ## Performance
 
-- Tested with 100,000 logs in ~52ms (enqueue/dequeue) on Windows 11, Intel i5-10210U (Release build)
+- Tested with 1,000,000 logs in ~603ms (enqueue/dequeue) on Windows 11, Intel i5-10210U (Release build)
 
 ## License
 

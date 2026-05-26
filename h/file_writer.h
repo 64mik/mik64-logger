@@ -1,6 +1,6 @@
 #ifndef FILE_WRITER_H
 #define FILE_WRITER_H
-#include "IWriter.h"
+#include "i_writer.h"
 #include <fstream>
 #include <filesystem>
 #include <mutex>

@@ -1,6 +1,6 @@
 #ifndef CONSOLE_WRITER_H
 #define CONSOLE_WRITER_H
-#include "IWriter.h"
+#include "i_writer.h"
 namespace mik64{
     class ConsoleWriter : public IWriter {
     public:

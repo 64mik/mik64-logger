@@ -1,6 +1,6 @@
 #ifndef MLOG_H
 #define MLOG_H
-#include "logger.h"
+#include "mik64_logger.h"
 #define MLOG_INFO(msg) mik64::Logger::getInstance().log(mik64::Logger::LogLevel::L_INFO, __FUNCTION__, __LINE__, msg)
 #define MLOG_WARNING(msg) mik64::Logger::getInstance().log(mik64::Logger::LogLevel::L_WARNING, __FUNCTION__, __LINE__, msg)
 #define MLOG_ERROR(msg) mik64::Logger::getInstance().log(mik64::Logger::LogLevel::L_ERROR, __FUNCTION__, __LINE__, msg)

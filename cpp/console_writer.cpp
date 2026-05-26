@@ -1,4 +1,4 @@
-#include "consoleWriter.h"
+#include "console_writer.h"
 #include <iostream>
 namespace mik64 {
     ConsoleWriter::ConsoleWriter() {

@@ -1,4 +1,4 @@
-#include "loggerFactory.h"
+#include "logger_factory.h"
 #include <set>
 namespace mik64{
     std::vector<std::shared_ptr<IWriter>> LoggerFactory::getWriters(std::initializer_list<std::string> writerTypes){

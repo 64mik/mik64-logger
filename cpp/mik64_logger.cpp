@@ -1,4 +1,4 @@
-#include "logger.h"
+#include "mik64_logger.h"
 #include <iostream>
 namespace mik64 {
     void Logger::setWriters(std::vector<std::shared_ptr<IWriter>> writerptr){
@@ -25,44 +25,46 @@ namespace mik64 {
         enQueue(getLogPrefix(logLevel, func_name, line) + message);
     }
     void Logger::flush() {
-        cv_.notify_all();
         std::unique_lock<std::mutex> lock(mtx_);
-        cv_.wait(lock, [this] { return (front_.empty() && back_.empty()) || !running_; });
+        cv_.notify_all();
+        cv_.wait(lock, [this] { return (pending_.load(std::memory_order_acquire) == 0) || !running_; });
     }
     void Logger::enQueue(const std::string& data){
         std::lock_guard<std::mutex> lock(mtx_);
+        bool fEmpty = front_.empty();
+        pending_.fetch_add(1, std::memory_order_relaxed);
         front_.push(data);
-        if(front_.size() % batch_ == 0){
+        if (fEmpty) {
             cv_.notify_one();
         }
     }
     void Logger::deQueue() {
         std::string data;
         std::vector<std::shared_ptr<IWriter>> writers;
+        std::queue<std::string> back;
         while (true) {
             {
                 std::unique_lock<std::mutex> lock(mtx_);
                 cv_.wait(lock, [this] { return !front_.empty() || !running_; });
                 if (!running_ && front_.empty()) break;
                 if(is_ptr_changed_) {
-                    writers.clear();
-                    for(const auto& writer : writerptrs_){
-                        writers.push_back(writer);
-                    }
+                    writers = writerptrs_;
                     is_ptr_changed_ = false;
                 }
-                std::swap(front_, back_);
+                std::swap(front_, back);
             }
-            
-            while(!back_ .empty()){
-                data = std::move(back_.front());
-                back_.pop(); 
+            while(!back.empty()){
+                data = std::move(back.front());
+                back.pop();
                 for(const auto& writer : writers){
                     if(writer)
                         writer->write(data);
                 }
+                size_t prev = pending_.fetch_sub(1, std::memory_order_acq_rel);
+                if (prev == 1) {
+                    cv_.notify_all();
+                }
             }
-            cv_.notify_one();
         }
     }
     std::string Logger::getLogPrefix(LogLevel logLevel, const std::string& func_name, int line) {

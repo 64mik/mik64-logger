@@ -1,4 +1,4 @@
-#include "fileWriter.h"
+#include "file_writer.h"
 #include <chrono>
 #include <iostream>
 namespace mik64 {
@@ -17,7 +17,6 @@ namespace mik64 {
         }
     }
     void FileWriter::write(const std::string& data) {
-        std::lock_guard<std::mutex> lock(file_mutex_);
         auto now = std::chrono::system_clock::now();
         auto in_time_t = std::chrono::system_clock::to_time_t(now);
         if (in_time_t != last_t_) {

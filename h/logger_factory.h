@@ -1,7 +1,7 @@
 #ifndef LOGGER_FACTORY_H
 #define LOGGER_FACTORY_H
-#include "fileWriter.h"
-#include "consoleWriter.h"
+#include "file_writer.h"
+#include "console_writer.h"
 #include <vector>
 #include <memory>
 namespace mik64::LoggerFactory {
