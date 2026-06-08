@@ -1,6 +1,5 @@
 #include <iostream>
 #include "mlog.h"
-#include "logger_factory.h"
 #include <chrono>
 #include <memory>
 void hello(){
@@ -23,7 +22,7 @@ void test(int count){
     std::cout << count << " logs file write time: " << file_diff.count() << " ms" << std::endl;
 }
 int main() {
-    mik64::Logger::getInstance().setWriters(mik64::LoggerFactory::getWriters({"file"}));
+    MLOG_SET_WRITERS("file");
     MLOG_INFO("This is an info message ");
     MLOG_WARNING_S << "This is a" << " warning message";
     MLOG_ERROR_S << 0.1 << "This is an error message";
